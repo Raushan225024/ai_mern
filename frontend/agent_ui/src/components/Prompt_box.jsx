@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addMessage } from "../redux/slices/chatSlices";
 import arrow from "../assets/arrow.png";
 console.log("Arrow image path:", arrow);
@@ -20,6 +20,7 @@ function PromptBox() {
   };
 
   const handleSubmit = async () => {
+    console.log("button clicked");
     const trimmedMessage = message.trim();
 
     if (!trimmedMessage) return;
@@ -34,27 +35,32 @@ function PromptBox() {
 
     try {
       // 2. API request
-      const response = await fetch("http://localhost:8000/api/chat", {
+      const response = await fetch("https://new-rag-agent.onrender.com/ask", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: trimmedMessage,
+          question: trimmedMessage,
         }),
       });
-
+      console.log("API response status:", response.status);
+     // const rowData = await response.text();
+     // console.log("Raw API response:", rowData);
       if (!response.ok) {
         throw new Error("API request failed");
       }
 
       const data = await response.json();
 
+    console.log("API response data:", data);
+    console.log("AI answer:", data.answer);
+
       // 3. Add AI response to Redux
       dispatch(
         addMessage({
           role: "assistant",
-          content: data.response,
+          content: data.answer,
         })
       );
     } catch (error) {
