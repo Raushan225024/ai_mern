@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 import History from "./history";
-import PromptBox from "./prompt_box";
+import PromptBox from "./Prompt_box";
 
 function Home() {
   const messages = useSelector((state) => state.chat.messages);
